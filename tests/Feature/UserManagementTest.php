@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -44,14 +46,17 @@ class UserManagementTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin', 'name' => 'Admin User']);
         User::factory()->create(['role' => 'operator', 'name' => 'Operator User']);
+        User::factory()->create(['role' => 'operator', 'name' => 'Xavier']);
 
         $response = $this->actingAs($admin)->get(route('users.index'));
 
         $response
             ->assertOk()
-            ->assertSee('All Users')
+            ->assertSee('Search users')
+            ->assertSee('Add New')
             ->assertSee('Admin User')
             ->assertSee('Operator User')
+            ->assertSee('XA')
             ->assertSee('Delete User')
             ->assertDontSee("confirm('Delete this user?')", false);
     }
@@ -75,6 +80,41 @@ class UserManagementTest extends TestCase
         $this->assertSame('New Admin', $user->name);
         $this->assertSame('admin', $user->role);
         $this->assertTrue(Hash::check('password123', $user->password));
+    }
+
+    public function test_admin_can_search_users(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        User::factory()->create(['name' => 'Searchable Operator', 'email' => 'searchable@example.test']);
+        User::factory()->create(['name' => 'Hidden Operator', 'email' => 'hidden@example.test']);
+
+        Livewire::actingAs($admin)
+            ->test('users.index')
+            ->set('search', 'Searchable')
+            ->assertSee('Searchable Operator')
+            ->assertDontSee('Hidden Operator');
+    }
+
+    public function test_admin_can_upload_user_photo(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $operator = User::factory()->create(['role' => 'operator', 'photo' => null]);
+        $photo = UploadedFile::fake()->image('avatar.jpg', 640, 640);
+
+        Livewire::actingAs($admin)
+            ->test('users.index')
+            ->call('openPhotoModal', $operator->id)
+            ->set('photo', $photo)
+            ->call('savePhoto')
+            ->assertHasNoErrors();
+
+        $operator->refresh();
+
+        $this->assertNotNull($operator->photo);
+        $this->assertStringEndsWith('.jpg', $operator->photo);
+        $this->assertTrue(File::exists(public_path('uploads/user/'.$operator->photo)));
+
+        File::delete(public_path('uploads/user/'.$operator->photo));
     }
 
     public function test_admin_can_update_another_user_role_and_password(): void

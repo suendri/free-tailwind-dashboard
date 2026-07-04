@@ -69,6 +69,30 @@ class CategoryIndexTest extends TestCase
         ]);
     }
 
+    public function test_categories_can_be_searched(): void
+    {
+        $user = User::factory()->create();
+        Category::factory()->create(['name' => 'News Category']);
+        Category::factory()->create(['name' => 'Finance Category']);
+
+        Livewire::actingAs($user)
+            ->test('categories.index')
+            ->set('search', 'News')
+            ->assertSee('News Category')
+            ->assertDontSee('Finance Category');
+    }
+
+    public function test_category_pagination_has_active_state(): void
+    {
+        $user = User::factory()->create();
+        Category::factory()->count(11)->create();
+
+        Livewire::actingAs($user)
+            ->test('categories.index')
+            ->assertSee('bg-blue-600')
+            ->assertSee('Next');
+    }
+
     public function test_category_can_be_created_from_full_page_form(): void
     {
         $user = User::factory()->create();

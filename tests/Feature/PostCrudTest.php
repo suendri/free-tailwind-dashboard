@@ -81,6 +81,19 @@ class PostCrudTest extends TestCase
         ]);
     }
 
+    public function test_posts_can_be_searched(): void
+    {
+        $user = User::factory()->create();
+        Post::factory()->create(['title' => 'Quarterly Report']);
+        Post::factory()->create(['title' => 'Release Notes']);
+
+        Livewire::actingAs($user)
+            ->test('posts.index')
+            ->set('search', 'Quarterly')
+            ->assertSee('Quarterly Report')
+            ->assertDontSee('Release Notes');
+    }
+
     public function test_post_can_be_created_from_full_page_form(): void
     {
         $user = User::factory()->create();

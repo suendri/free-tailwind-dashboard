@@ -19,6 +19,8 @@ new class extends Component
 
     public string $text = '';
 
+    public string $search = '';
+
     public ?int $editingPostId = null;
 
     /**
@@ -50,8 +52,21 @@ new class extends Component
     {
         return Post::query()
             ->with('category:id,name')
+            ->when($this->search !== '', function ($query): void {
+                $query->where(function ($query): void {
+                    $query
+                        ->where('title', 'like', '%'.$this->search.'%')
+                        ->orWhere('text', 'like', '%'.$this->search.'%')
+                        ->orWhereHas('category', fn ($query) => $query->where('name', 'like', '%'.$this->search.'%'));
+                });
+            })
             ->latest()
             ->paginate(10);
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
 
     #[Computed]
@@ -125,6 +140,18 @@ new class extends Component
     class="space-y-6"
 >
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="relative w-full sm:max-w-xs">
+            <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
+            </svg>
+            <input
+                type="search"
+                wire:model.live.debounce.300ms="search"
+                class="block w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white dark:focus:border-blue-500"
+                placeholder="Search posts"
+            >
+        </div>
+
         <button
             type="button"
             x-on:click="$wire.resetForm().then(() => $dispatch('open-modal', 'post-create'))"
@@ -199,7 +226,7 @@ new class extends Component
                     @empty
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No posts yet.
+                                {{ $search === '' ? 'No posts yet.' : 'No posts found.' }}
                             </td>
                         </tr>
                     @endforelse
@@ -209,7 +236,7 @@ new class extends Component
 
         @if ($this->posts->hasPages())
             <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-800">
-                {{ $this->posts->links() }}
+                {{ $this->posts->links('components.ui.pagination') }}
             </div>
         @endif
     </section>

@@ -28,6 +28,21 @@
 </head>
 
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100" x-cloak>
+    @php
+        $currentUser = auth()->user();
+        $currentUserName = $currentUser?->name ?? 'Admin';
+        $currentUserEmail = $currentUser?->email ?? 'admin@app.com';
+        $currentUserPhoto = $currentUser?->photo ? asset('uploads/user/'.$currentUser->photo) : null;
+        $currentUserNameWords = collect(preg_split('/\s+/', trim($currentUserName)) ?: [])->filter()->values();
+
+        $currentUserInitials = $currentUserNameWords->count() === 1
+            ? Illuminate\Support\Str::upper(Illuminate\Support\Str::substr($currentUserNameWords->first(), 0, 2))
+            : Illuminate\Support\Str::upper(
+                Illuminate\Support\Str::substr($currentUserNameWords->first() ?? 'A', 0, 1).
+                    Illuminate\Support\Str::substr($currentUserNameWords->get(1) ?? 'D', 0, 1),
+            );
+    @endphp
+
     <div class="flex h-screen">
         <aside
             class="fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:static"
@@ -178,16 +193,21 @@
                 <div class="border-t border-gray-200 p-2 dark:border-gray-800">
                     <div class="flex items-center gap-3 px-3 py-2">
                         <div
-                            class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-blue-100 text-sm font-semibold text-blue-600 dark:bg-blue-950 dark:text-blue-400">
-                            {{ auth()->check() ? mb_substr(auth()->user()->name, 0, 2) : 'AD' }}
+                            class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded bg-blue-100 text-sm font-semibold text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+                            @if ($currentUserPhoto)
+                                <img src="{{ $currentUserPhoto }}" alt="{{ $currentUserName }}"
+                                    class="h-full w-full object-cover">
+                            @else
+                                {{ $currentUserInitials }}
+                            @endif
                         </div>
                         <div x-show="open" x-transition:enter="transition-opacity duration-300 ease-in-out"
                             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                             x-transition:leave="transition-opacity duration-300 ease-in-out"
                             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                             class="min-w-0 flex-1 overflow-hidden whitespace-nowrap">
-                            <div class="truncate text-sm font-medium">{{ auth()->user()->name ?? 'Admin' }}</div>
-                            <div class="truncate text-xs text-gray-500">{{ auth()->user()->email ?? 'admin@app.com' }}
+                            <div class="truncate text-sm font-medium">{{ $currentUserName }}</div>
+                            <div class="truncate text-xs text-gray-500">{{ $currentUserEmail }}
                             </div>
                         </div>
                     </div>

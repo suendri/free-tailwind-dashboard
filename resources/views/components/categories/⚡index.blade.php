@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -11,6 +12,8 @@ new class extends Component
     use WithPagination;
 
     public string $name = '';
+
+    public string $search = '';
 
     public ?int $editingCategoryId = null;
 
@@ -40,11 +43,17 @@ new class extends Component
     }
 
     #[Computed]
-    public function categories()
+    public function categories(): LengthAwarePaginator
     {
         return Category::query()
+            ->when($this->search !== '', fn ($query) => $query->where('name', 'like', '%'.$this->search.'%'))
             ->latest()
             ->paginate(10);
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function resetForm(): void
@@ -108,6 +117,17 @@ new class extends Component
     class="space-y-6"
 >
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="relative w-full sm:max-w-xs">
+            <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
+            </svg>
+            <input
+                type="search"
+                wire:model.live.debounce.300ms="search"
+                class="block w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-9 pr-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white dark:focus:border-blue-500"
+                placeholder="Search categories"
+            >
+        </div>
 
         <button
             type="button"
@@ -182,7 +202,7 @@ new class extends Component
                     @empty
                         <tr>
                             <td colspan="3" class="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No categories yet.
+                                {{ $search === '' ? 'No categories yet.' : 'No categories found.' }}
                             </td>
                         </tr>
                     @endforelse
@@ -192,7 +212,7 @@ new class extends Component
 
         @if ($this->categories->hasPages())
             <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-800">
-                {{ $this->categories->links() }}
+                {{ $this->categories->links('components.ui.pagination') }}
             </div>
         @endif
     </section>
