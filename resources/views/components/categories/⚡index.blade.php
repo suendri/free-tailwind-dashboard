@@ -108,12 +108,6 @@ new class extends Component
     class="space-y-6"
 >
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-950 dark:text-white">All Category</h2>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Create, edit, and organize the categories used by your content.
-            </p>
-        </div>
 
         <button
             type="button"

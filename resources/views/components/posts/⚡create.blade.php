@@ -64,7 +64,7 @@ new class extends Component
 };
 ?>
 
-<div class="mx-auto max-w-3xl space-y-6">
+<div class="max-w-3xl space-y-6">
     <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
         <div class="mb-6">
             <h2 class="text-xl font-semibold text-gray-950 dark:text-white">Add New Post</h2>

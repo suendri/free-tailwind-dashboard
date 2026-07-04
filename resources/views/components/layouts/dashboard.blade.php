@@ -76,6 +76,47 @@
                         </span>
                     </a>
 
+                                        <div>
+                        <button type="button" @click="activeMenu = (activeMenu === 'categories' ? null : 'categories')"
+                            class="flex w-full items-center justify-between rounded-md px-3 py-2 transition-colors group {{ request()->routeIs('categories.*') ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a2 2 0 0 1-2.828 0l-7-7A1.994 1.994 0 0 1 3 12V7a4 4 0 0 1 4-4Z" />
+                                </svg>
+                                <span class="transition-opacity duration-300 ease-in-out"
+                                    :class="!open ? 'w-0 overflow-hidden opacity-0 delay-0' : 'opacity-100 delay-0'">
+                                    Categories
+                                </span>
+                            </div>
+                            <svg :class="[activeMenu === 'categories' && 'rotate-180', !open ? 'w-0 opacity-0' : 'opacity-100']"
+                                class="h-4 w-4 shrink-0 transition-all duration-300 ease-in-out" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div x-show="activeMenu === 'categories'" x-collapse.duration.300ms style="display: none;"
+                            class="mt-1" :class="!open && '!block'">
+                            <div class="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out"
+                                :class="open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
+                                <div class="overflow-hidden">
+                                    <a href="{{ route('categories.index') }}"
+                                        class="ml-11 block rounded-md px-3 py-2 transition-transform duration-300 ease-in-out {{ request()->routeIs('categories.index') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}"
+                                        :class="!open ? '-translate-x-5' : 'translate-x-0'">
+                                        All Category
+                                    </a>
+                                    <a href="{{ route('categories.create') }}"
+                                        class="ml-11 block rounded-md px-3 py-2 transition-transform duration-300 ease-in-out {{ request()->routeIs('categories.create') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}"
+                                        :class="!open ? '-translate-x-5' : 'translate-x-0'">
+                                        Add New
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <button type="button" @click="activeMenu = (activeMenu === 'posts' ? null : 'posts')"
                             class="flex w-full items-center justify-between rounded-md px-3 py-2 transition-colors group {{ request()->routeIs('posts.*') ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}">
@@ -109,47 +150,6 @@
                                     </a>
                                     <a href="{{ route('posts.create') }}"
                                         class="ml-11 block rounded-md px-3 py-2 transition-transform duration-300 ease-in-out {{ request()->routeIs('posts.create') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}"
-                                        :class="!open ? '-translate-x-5' : 'translate-x-0'">
-                                        Add New
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <button type="button" @click="activeMenu = (activeMenu === 'categories' ? null : 'categories')"
-                            class="flex w-full items-center justify-between rounded-md px-3 py-2 transition-colors group {{ request()->routeIs('categories.*') ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}">
-                            <div class="flex min-w-0 items-center gap-3">
-                                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a2 2 0 0 1-2.828 0l-7-7A1.994 1.994 0 0 1 3 12V7a4 4 0 0 1 4-4Z" />
-                                </svg>
-                                <span class="transition-opacity duration-300 ease-in-out"
-                                    :class="!open ? 'w-0 overflow-hidden opacity-0 delay-0' : 'opacity-100 delay-0'">
-                                    Categories
-                                </span>
-                            </div>
-                            <svg :class="[activeMenu === 'categories' && 'rotate-180', !open ? 'w-0 opacity-0' : 'opacity-100']"
-                                class="h-4 w-4 shrink-0 transition-all duration-300 ease-in-out" fill="none"
-                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <div x-show="activeMenu === 'categories'" x-collapse.duration.300ms style="display: none;"
-                            class="mt-1" :class="!open && '!block'">
-                            <div class="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out"
-                                :class="open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
-                                <div class="overflow-hidden">
-                                    <a href="{{ route('categories.index') }}"
-                                        class="ml-11 block rounded-md px-3 py-2 transition-transform duration-300 ease-in-out {{ request()->routeIs('categories.index') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}"
-                                        :class="!open ? '-translate-x-5' : 'translate-x-0'">
-                                        All Category
-                                    </a>
-                                    <a href="{{ route('categories.create') }}"
-                                        class="ml-11 block rounded-md px-3 py-2 transition-transform duration-300 ease-in-out {{ request()->routeIs('categories.create') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}"
                                         :class="!open ? '-translate-x-5' : 'translate-x-0'">
                                         Add New
                                     </a>

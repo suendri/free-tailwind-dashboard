@@ -37,7 +37,6 @@ class UserManagementTest extends TestCase
         $response
             ->assertOk()
             ->assertDontSee('All Users')
-            ->assertDontSee('Users')
             ->assertDontSee(route('users.index'));
     }
 

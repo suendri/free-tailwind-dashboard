@@ -170,13 +170,6 @@ new class extends Component
     class="space-y-6"
 >
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-950 dark:text-white">All Users</h2>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Create users, update roles, and keep admin access protected.
-            </p>
-        </div>
-
         <button
             type="button"
             x-on:click="$wire.resetForm().then(() => $dispatch('open-modal', 'user-create'))"
@@ -370,7 +363,7 @@ new class extends Component
                     Cancel
                 </button>
                 <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-600/20">
-                    Save User
+                    Save
                 </button>
             </div>
         </form>

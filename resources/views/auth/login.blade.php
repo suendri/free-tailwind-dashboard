@@ -1,4 +1,24 @@
 <x-layouts.auth title="Login">
+    <x-slot:aside>
+        <p class="mb-4 text-sm font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300">Admin workspace</p>
+        <h1 class="text-4xl font-semibold leading-tight tracking-tight">
+            Masuk dan lanjutkan pengelolaan konten dengan cepat.
+        </h1>
+        <p class="mt-5 text-sm leading-6 text-slate-600 dark:text-gray-300">
+            Dashboard ini menyatukan kategori, posts, dan users dalam alur kerja yang rapi untuk admin dan operator.
+        </p>
+        <div class="mt-8 grid gap-3">
+            <div class="rounded-lg border border-sky-200 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <p class="text-sm font-semibold">Akses terkontrol</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-gray-400">Role admin dan operator menjaga menu tetap sesuai tanggung jawab akun.</p>
+            </div>
+            <div class="rounded-lg border border-sky-200 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <p class="text-sm font-semibold">CRUD siap pakai</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-gray-400">Kelola data utama melalui tabel, modal, dan konfirmasi aksi yang konsisten.</p>
+            </div>
+        </div>
+    </x-slot:aside>
+
     <div class="mb-8">
         <p class="text-sm font-medium text-blue-600 dark:text-blue-400">Login akun</p>
         <h1 class="mt-2 text-2xl font-semibold tracking-tight text-gray-950 dark:text-white">Masuk ke dashboard</h1>
@@ -26,7 +46,7 @@
                 required
                 autofocus
                 autocomplete="email"
-                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:focus:border-blue-500"
+                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white dark:focus:border-blue-500"
                 placeholder="admin@example.com"
             >
             @error('email')
@@ -49,7 +69,7 @@
                 type="password"
                 required
                 autocomplete="current-password"
-                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:focus:border-blue-500"
+                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white dark:focus:border-blue-500"
                 placeholder="Password akun"
             >
             @error('password')
@@ -62,7 +82,7 @@
                 name="remember"
                 type="checkbox"
                 value="1"
-                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 dark:border-gray-700 dark:bg-gray-900"
+                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 dark:border-gray-700 dark:bg-gray-950"
                 @checked(old('remember'))
             >
             Ingat sesi login
