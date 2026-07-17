@@ -188,6 +188,19 @@
                         </a>
                     @endif
 
+                    <a href="{{ route('profile.index') }}"
+                        class="flex items-center gap-3 rounded-md px-3 py-2 transition-colors group {{ request()->routeIs('profile.*') ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800' }}">
+                        <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.118a7.5 7.5 0 0 1 15 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.5-1.632Z" />
+                        </svg>
+                        <span class="transition-opacity duration-300 ease-in-out"
+                            :class="!open ? 'w-0 overflow-hidden opacity-0 delay-0' : 'opacity-100 delay-0'">
+                            Profile
+                        </span>
+                    </a>
+
                 </nav>
 
                 <div class="border-t border-gray-200 p-2 dark:border-gray-800">

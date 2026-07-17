@@ -117,7 +117,7 @@ class UserManagementTest extends TestCase
         File::delete(public_path('uploads/user/'.$operator->photo));
     }
 
-    public function test_admin_can_update_another_user_role_and_password(): void
+    public function test_admin_email_change_requires_user_to_verify_the_new_email(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $operator = User::factory()->create(['role' => 'operator', 'email' => 'operator@example.test']);
@@ -139,6 +139,36 @@ class UserManagementTest extends TestCase
         $this->assertSame('promoted@example.test', $operator->email);
         $this->assertSame('admin', $operator->role);
         $this->assertTrue(Hash::check('newpassword', $operator->password));
+        $this->assertNull($operator->email_verified_at);
+
+        $this->actingAs($operator)
+            ->get(route('dashboard'))
+            ->assertRedirect(route('verification.notice'));
+    }
+
+    public function test_admin_update_preserves_verification_when_email_does_not_change(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $operator = User::factory()->create([
+            'role' => 'operator',
+            'email' => 'operator@example.test',
+        ]);
+        $verifiedAt = $operator->email_verified_at;
+
+        Livewire::actingAs($admin)
+            ->test('users.index')
+            ->call('startEdit', $operator->id)
+            ->set('name', 'Renamed Operator')
+            ->set('email', 'operator@example.test')
+            ->set('role', 'operator')
+            ->call('update')
+            ->assertHasNoErrors();
+
+        $operator->refresh();
+
+        $this->assertSame('Renamed Operator', $operator->name);
+        $this->assertNotNull($operator->email_verified_at);
+        $this->assertTrue($verifiedAt->equalTo($operator->email_verified_at));
     }
 
     public function test_admin_cannot_delete_own_account(): void

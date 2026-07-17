@@ -38,4 +38,13 @@ class DashboardAccessTest extends TestCase
             ->assertSee('data-posts-year-chart')
             ->assertDontSee('cdn.jsdelivr.net/npm/apexcharts');
     }
+
+    public function test_unverified_user_is_redirected_to_email_verification_notice(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertRedirect(route('verification.notice'));
+    }
 }

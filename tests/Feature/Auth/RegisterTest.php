@@ -17,7 +17,7 @@ class RegisterTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Registrasi akun')
-            ->assertSee('Akun baru akan dibuat sebagai operator')
+            ->assertSee('wajib memverifikasi email')
             ->assertDontSee('name="role"', false);
     }
 

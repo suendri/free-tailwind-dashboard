@@ -1,4 +1,4 @@
-<x-layouts.dashboard title="Dashboard" page-title="Dashboard" page-subtitle="Ringkasan data aplikasi">
+<x-layouts.dashboard title="Dashboard" page-title="Dashboard" page-subtitle="Application data summary">
     <div class="space-y-6">
         <section class="grid gap-4 md:grid-cols-3">
             <article class="rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">

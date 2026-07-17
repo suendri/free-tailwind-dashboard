@@ -14,7 +14,7 @@
             </div>
             <div class="rounded-lg border border-sky-200 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
                 <p class="text-sm font-semibold">Siap digunakan</p>
-                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-gray-400">Setelah registrasi berhasil, pengguna diarahkan ke dashboard sesuai konfigurasi Fortify.</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-gray-400">Setelah registrasi, pengguna wajib memverifikasi alamat email sebelum membuka dashboard.</p>
             </div>
         </div>
     </x-slot:aside>
@@ -23,7 +23,7 @@
         <p class="text-sm font-medium text-blue-600 dark:text-blue-400">Registrasi akun</p>
         <h1 class="mt-2 text-2xl font-semibold tracking-tight text-gray-950 dark:text-white">Buat akun dashboard</h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Akun baru akan dibuat sebagai operator.
+            Akun baru akan dibuat sebagai operator dan wajib memverifikasi email.
         </p>
     </div>
 

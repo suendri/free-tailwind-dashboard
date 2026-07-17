@@ -1,12 +1,10 @@
 <?php
 
+use App\Actions\Users\SaveUserPhoto;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Intervention\Image\Drivers\Gd\Driver as GdDriver;
-use Intervention\Image\ImageManager;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -193,7 +191,13 @@ new class extends Component {
             $data['password'] = $validated['password'];
         }
 
-        $user->update($data);
+        $user->fill($data);
+
+        if ($user->isDirty('email')) {
+            $user->forceFill(['email_verified_at' => null]);
+        }
+
+        $user->save();
 
         $this->resetForm();
         $this->dispatch('close-modal', name: 'user-edit');
@@ -225,34 +229,18 @@ new class extends Component {
         $this->resetValidation('photo');
     }
 
-    public function savePhoto(): void
+    public function savePhoto(SaveUserPhoto $saveUserPhoto): void
     {
         if ($this->photoUserId === null) {
             return;
         }
 
         $validated = $this->validate([
-            'photo' => ['required', 'image', 'max:2048'],
+            'photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $user = User::query()->findOrFail($this->photoUserId);
-        $uploadPath = public_path('uploads/user');
-        $fileName = Str::uuid() . '.jpg';
-        $targetPath = $uploadPath . DIRECTORY_SEPARATOR . $fileName;
-
-        File::ensureDirectoryExists($uploadPath);
-
-        $manager = new ImageManager(new GdDriver);
-        $manager
-            ->decodePath($validated['photo']->getRealPath())
-            ->cover(320, 320)
-            ->save($targetPath, quality: 85);
-
-        if ($user->photo !== null) {
-            File::delete($uploadPath . DIRECTORY_SEPARATOR . $user->photo);
-        }
-
-        $user->update(['photo' => $fileName]);
+        $fileName = $saveUserPhoto->execute($user, $validated['photo']);
 
         $this->photo = null;
         $this->photoUserPhoto = $fileName;
@@ -556,7 +544,7 @@ new class extends Component {
             <div class="flex flex-col items-center gap-4">
                 <div
                     class="flex h-32 w-32 items-center justify-center overflow-hidden rounded-xl bg-blue-50 text-3xl font-semibold text-blue-700 ring-1 ring-blue-100 dark:bg-blue-950 dark:text-blue-200 dark:ring-blue-900">
-                    @if ($photo)
+                    @if ($photo?->isPreviewable())
                         <img src="{{ $photo->temporaryUrl() }}" alt="Photo preview" class="h-full w-full object-cover">
                     @elseif ($photoUserPhoto !== null)
                         <img src="{{ $this->photoUrl($photoUserPhoto) }}" alt="{{ $photoUserName }}"
@@ -568,7 +556,7 @@ new class extends Component {
 
                 <div class="text-center">
                     <div class="text-sm font-semibold text-gray-950 dark:text-white">{{ $photoUserName }}</div>
-                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">JPG, PNG, or WEBP. Max 2 MB.</div>
+                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">JPG, PNG, or WEBP. 1:1 ratio, Max 2 MB.</div>
                 </div>
             </div>
 

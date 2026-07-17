@@ -28,8 +28,8 @@
     <body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100" x-cloak>
         <main class="flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
             <div class="grid w-full max-w-6xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900 lg:min-h-[680px] lg:grid-cols-[minmax(0,1fr)_minmax(420px,500px)]">
-                <section class="hidden bg-sky-50 p-10 text-slate-950 dark:bg-slate-900 lg:flex lg:flex-col lg:justify-between">
-                    <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-3">
+                <section class="hidden bg-sky-50 p-10 text-slate-950 dark:bg-slate-900 dark:text-white lg:flex lg:flex-col lg:justify-between">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
                         <span class="flex h-10 w-10 items-center justify-center rounded bg-blue-600 text-sm font-bold text-white">L</span>
                         <span class="text-lg font-semibold">{{ config('app.name', 'Laravel') }}</span>
                     </a>
@@ -57,7 +57,7 @@
                 <section class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-5 py-10 sm:px-10 lg:min-h-full">
                     <div class="w-full max-w-md">
                         <div class="mb-8 flex items-center justify-between">
-                            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-3 lg:hidden">
+                            <a href="{{ route('home') }}" class="inline-flex items-center gap-3 lg:hidden">
                                 <span class="flex h-9 w-9 items-center justify-center rounded bg-blue-600 text-sm font-bold text-white">L</span>
                                 <span class="font-semibold">{{ config('app.name', 'Laravel') }}</span>
                             </a>
